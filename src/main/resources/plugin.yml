@@ -1,0 +1,7 @@
+name: Surf
+version: 1.0
+description: Surf for Spigot
+author: batthomas
+website: http://batthomas.ch/
+main: ch.batthomas.surf.Surf
+database: false
