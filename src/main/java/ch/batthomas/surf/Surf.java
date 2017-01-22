@@ -3,7 +3,9 @@ package ch.batthomas.surf;
 import ch.batthomas.surf.constant.ConfigConstant;
 import ch.batthomas.surf.database.KitQuery;
 import ch.batthomas.surf.database.MySQLConnector;
+import ch.batthomas.surf.database.StatsQuery;
 import ch.batthomas.surf.listener.BlockEventBlocker;
+import ch.batthomas.surf.listener.JoinListener;
 import ch.batthomas.surf.listener.PlayerEventBlocker;
 import ch.batthomas.surf.util.ConfigHelper;
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class Surf extends JavaPlugin {
     private ConfigHelper config;
     private MySQLConnector mysql;
     private KitQuery kq;
+    private StatsQuery sq;
 
     @Override
     public void onEnable() {
@@ -38,6 +41,7 @@ public class Surf extends JavaPlugin {
     public void registerEvents() {
         Bukkit.getPluginManager().registerEvents(new BlockEventBlocker(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerEventBlocker(), this);
+        Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
     }
 
     public void prepareConfig() {
@@ -54,9 +58,14 @@ public class Surf extends JavaPlugin {
         try {
             mysql = new MySQLConnector(this);
             kq = new KitQuery(mysql);
+            sq = new StatsQuery(mysql);
             mysql.connect();
         } catch (IOException | SQLException ex) {
             Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public StatsQuery getStatsQuery() {
+        return sq;
     }
 }
