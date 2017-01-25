@@ -4,6 +4,8 @@ import ch.batthomas.surf.util.Kit;
 import com.google.gson.Gson;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -50,5 +52,22 @@ public class KitQuery {
         kit.addItem("leggings", gson.fromJson(rs.getString("leggings"), ItemStack.class));
         kit.addItem("boots", gson.fromJson(rs.getString("boots"), ItemStack.class));
         return kit;
+    }
+
+    public List<Kit> getKits() throws SQLException {
+        ResultSet rs = mysql.executeQuery("SELECT * FROM surf_kits");
+        List<Kit> kits = new ArrayList<>();
+        while (rs.next()) {
+            Kit kit = new Kit(rs.getString("name"));
+            for (int i = 1; i < 10; i++) {
+                kit.addItem("slot" + i, gson.fromJson(rs.getString("slot" + i), ItemStack.class));
+            }
+            kit.addItem("helmet", gson.fromJson(rs.getString("helmet"), ItemStack.class));
+            kit.addItem("chestplate", gson.fromJson(rs.getString("chestplate"), ItemStack.class));
+            kit.addItem("leggings", gson.fromJson(rs.getString("leggings"), ItemStack.class));
+            kit.addItem("boots", gson.fromJson(rs.getString("boots"), ItemStack.class));
+            kits.add(kit);
+        }
+        return kits;
     }
 }

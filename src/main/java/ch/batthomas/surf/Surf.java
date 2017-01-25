@@ -5,9 +5,13 @@ import ch.batthomas.surf.database.KitQuery;
 import ch.batthomas.surf.database.MySQLConnector;
 import ch.batthomas.surf.database.StatsQuery;
 import ch.batthomas.surf.listener.BlockEventBlocker;
+import ch.batthomas.surf.listener.GameListener;
 import ch.batthomas.surf.listener.JoinListener;
 import ch.batthomas.surf.listener.PlayerEventBlocker;
+import ch.batthomas.surf.manager.KitManager;
+import ch.batthomas.surf.scheduler.GameScheduler;
 import ch.batthomas.surf.util.ConfigHelper;
+import ch.batthomas.surf.util.Kit;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -23,14 +27,22 @@ public class Surf extends JavaPlugin {
 
     private ConfigHelper config;
     private MySQLConnector mysql;
+
     private KitQuery kq;
     private StatsQuery sq;
 
+    private KitManager km;
+
+    private String prefix;
+
     @Override
     public void onEnable() {
-        registerEvents();
+        prefix = "§b§lSurf §r§8| §7";
         prepareConfig();
         connectMySQL();
+        registerEvents();
+        registerManagers();
+        startSchedulers();
     }
 
     @Override
@@ -38,13 +50,22 @@ public class Surf extends JavaPlugin {
 
     }
 
-    public void registerEvents() {
+    private void registerEvents() {
         Bukkit.getPluginManager().registerEvents(new BlockEventBlocker(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerEventBlocker(), this);
         Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
     }
 
-    public void prepareConfig() {
+    private void registerManagers() {
+        try {
+            km = new KitManager(this);
+        } catch (SQLException ex) {
+            Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void prepareConfig() {
         try {
             ConfigConstant cons = new ConfigConstant();
             cons.initializeContent();
@@ -54,7 +75,7 @@ public class Surf extends JavaPlugin {
         }
     }
 
-    public void connectMySQL() {
+    private void connectMySQL() {
         try {
             mysql = new MySQLConnector(this);
             kq = new KitQuery(mysql);
@@ -64,8 +85,24 @@ public class Surf extends JavaPlugin {
             Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private void startSchedulers(){
+        GameScheduler gs = new GameScheduler(this);
+        gs.start();
+    }
 
     public StatsQuery getStatsQuery() {
         return sq;
+    }
+
+    public KitQuery getKitQuery() {
+        return kq;
+    }
+    public KitManager getKitManager(){
+        return km;
+    }
+
+    public String getPrefix() {
+        return prefix;
     }
 }

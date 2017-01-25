@@ -29,6 +29,10 @@ public class Kit {
     public Map<String, ItemStack> getItems() {
         return items;
     }
+    
+    public ItemStack getItem(String key){
+        return items.get(key);
+    }
 
     public void addItem(String slot, ItemStack item) {
         items.put(slot, item);

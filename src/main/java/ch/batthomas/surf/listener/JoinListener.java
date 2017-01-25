@@ -12,18 +12,19 @@ import org.bukkit.event.player.PlayerJoinEvent;
  *
  * @author batthomas
  */
-public class JoinListener implements Listener{
-    
+public class JoinListener implements Listener {
+
     private final Surf plugin;
-    
-    public JoinListener(Surf plugin){
-        this.plugin  = plugin;
+
+    public JoinListener(Surf plugin) {
+        this.plugin = plugin;
     }
-    
+
     @EventHandler
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e) {
         try {
             plugin.getStatsQuery().addPlayer(e.getPlayer());
+            plugin.getKitManager().applyKit(plugin.getKitManager().getCurrentKit());
         } catch (SQLException ex) {
             Logger.getLogger(JoinListener.class.getName()).log(Level.SEVERE, null, ex);
         }
