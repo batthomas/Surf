@@ -29,8 +29,8 @@ public class Kit {
     public Map<String, ItemStack> getItems() {
         return items;
     }
-    
-    public ItemStack getItem(String key){
+
+    public ItemStack getItem(String key) {
         return items.get(key);
     }
 

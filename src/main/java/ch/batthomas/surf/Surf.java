@@ -11,7 +11,6 @@ import ch.batthomas.surf.listener.PlayerEventBlocker;
 import ch.batthomas.surf.manager.KitManager;
 import ch.batthomas.surf.scheduler.GameScheduler;
 import ch.batthomas.surf.util.ConfigHelper;
-import ch.batthomas.surf.util.Kit;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -85,8 +84,8 @@ public class Surf extends JavaPlugin {
             Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void startSchedulers(){
+
+    private void startSchedulers() {
         GameScheduler gs = new GameScheduler(this);
         gs.start();
     }
@@ -98,7 +97,8 @@ public class Surf extends JavaPlugin {
     public KitQuery getKitQuery() {
         return kq;
     }
-    public KitManager getKitManager(){
+
+    public KitManager getKitManager() {
         return km;
     }
 

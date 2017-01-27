@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -28,12 +29,12 @@ public class KitQuery {
         sb.append("VALUES (");
         sb.append("'").append(kit.getName()).append("'").append(", ");
         for (int i = 1; i < 10; i++) {
-            sb.append("'").append(gson.toJson(kit.getItems().get("slot" + i))).append("'").append(", ");
+            sb.append("'").append(serializeItem(kit.getItems().get("slot" + i))).append("'").append(", ");
         }
-        sb.append("'").append(gson.toJson(kit.getItems().get("helmet"))).append("'").append(", ");
-        sb.append("'").append(gson.toJson(kit.getItems().get("chestplate"))).append("'").append(", ");
-        sb.append("'").append(gson.toJson(kit.getItems().get("leggings"))).append("'").append(", ");
-        sb.append("'").append(gson.toJson(kit.getItems().get("boots"))).append("'");
+        sb.append("'").append(serializeItem(kit.getItems().get("helmet"))).append("'").append(", ");
+        sb.append("'").append(serializeItem(kit.getItems().get("chestplate"))).append("'").append(", ");
+        sb.append("'").append(serializeItem(kit.getItems().get("leggings"))).append("'").append(", ");
+        sb.append("'").append(serializeItem(kit.getItems().get("boots"))).append("'");
         sb.append(")");
         mysql.executeUpdate(sb.toString());
     }
@@ -45,12 +46,12 @@ public class KitQuery {
         rs.first();
         Kit kit = new Kit(rs.getString("name"));
         for (int i = 1; i < 10; i++) {
-            kit.addItem("slot" + i, gson.fromJson(rs.getString("slot" + i), ItemStack.class));
+            deserializeItem(kit, "slot" + i, rs.getString("slot" + i));
         }
-        kit.addItem("helmet", gson.fromJson(rs.getString("helmet"), ItemStack.class));
-        kit.addItem("chestplate", gson.fromJson(rs.getString("chestplate"), ItemStack.class));
-        kit.addItem("leggings", gson.fromJson(rs.getString("leggings"), ItemStack.class));
-        kit.addItem("boots", gson.fromJson(rs.getString("boots"), ItemStack.class));
+        deserializeItem(kit, "helmet", rs.getString("helmet"));
+        deserializeItem(kit, "chestplate", rs.getString("chestplate"));
+        deserializeItem(kit, "leggings", rs.getString("leggings"));
+        deserializeItem(kit, "boots", rs.getString("boots"));
         return kit;
     }
 
@@ -60,14 +61,24 @@ public class KitQuery {
         while (rs.next()) {
             Kit kit = new Kit(rs.getString("name"));
             for (int i = 1; i < 10; i++) {
-                kit.addItem("slot" + i, gson.fromJson(rs.getString("slot" + i), ItemStack.class));
+                deserializeItem(kit, "slot" + i, rs.getString("slot" + i));
             }
-            kit.addItem("helmet", gson.fromJson(rs.getString("helmet"), ItemStack.class));
-            kit.addItem("chestplate", gson.fromJson(rs.getString("chestplate"), ItemStack.class));
-            kit.addItem("leggings", gson.fromJson(rs.getString("leggings"), ItemStack.class));
-            kit.addItem("boots", gson.fromJson(rs.getString("boots"), ItemStack.class));
+            deserializeItem(kit, "helmet", rs.getString("helmet"));
+            deserializeItem(kit, "chestplate", rs.getString("chestplate"));
+            deserializeItem(kit, "leggings", rs.getString("leggings"));
+            deserializeItem(kit, "boots", rs.getString("boots"));
             kits.add(kit);
         }
         return kits;
+    }
+
+    public String serializeItem(ItemStack item) {
+        return gson.toJson(item != null ? item.serialize() : null);
+    }
+
+    public void deserializeItem(Kit kit, String path, String item) {
+        if (gson.fromJson(item, Map.class) != null) {
+            kit.addItem(path, ItemStack.deserialize(gson.fromJson(item, Map.class)));
+        }
     }
 }

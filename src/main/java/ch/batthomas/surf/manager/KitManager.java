@@ -13,20 +13,19 @@ import org.bukkit.entity.Player;
  * @author batthomas
  */
 public class KitManager {
-    
+
     private final List<Kit> kits;
     private Kit currentKit;
     private final Surf plugin;
-    
+
     public KitManager(Surf plugin) throws SQLException {
         kits = plugin.getKitQuery().getKits();
         this.plugin = plugin;
     }
-    
+
     public Kit nextKit() {
         if (kits != null && !kits.isEmpty()) {
             Random random = new Random(System.currentTimeMillis());
-            System.err.println("----------------- " + kits + " --- " + " --------------");
             currentKit = kits.get(kits.size() != 1 ? random.nextInt(kits.size() - 1) : 0);
             kits.remove(currentKit);
             return currentKit;
@@ -35,7 +34,7 @@ public class KitManager {
             return null;
         }
     }
-    
+
     public void applyKit(Kit kit) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             for (int i = 0; i < 9; i++) {
@@ -47,8 +46,8 @@ public class KitManager {
             player.getInventory().setBoots(kit.getItem("boots"));
         }
     }
-    
-    public Kit getCurrentKit(){
+
+    public Kit getCurrentKit() {
         return currentKit;
     }
 }
