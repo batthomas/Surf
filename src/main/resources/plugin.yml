@@ -3,4 +3,6 @@ version: 1.0
 description: Surf for Spigot
 author: batthomas
 main: ch.batthomas.surf.Surf
-database: false
+database: true
+commands:
+    nextround:

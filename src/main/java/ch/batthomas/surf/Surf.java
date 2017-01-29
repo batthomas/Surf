@@ -1,11 +1,13 @@
 package ch.batthomas.surf;
 
+import ch.batthomas.surf.command.NextRound;
 import ch.batthomas.surf.constant.ConfigConstant;
 import ch.batthomas.surf.database.KitQuery;
 import ch.batthomas.surf.database.MySQLConnector;
 import ch.batthomas.surf.database.StatsQuery;
 import ch.batthomas.surf.listener.BlockEventBlocker;
 import ch.batthomas.surf.listener.GameListener;
+import ch.batthomas.surf.listener.InventoryEventBlocker;
 import ch.batthomas.surf.listener.JoinListener;
 import ch.batthomas.surf.listener.PlayerEventBlocker;
 import ch.batthomas.surf.manager.KitManager;
@@ -30,6 +32,8 @@ public class Surf extends JavaPlugin {
     private KitQuery kq;
     private StatsQuery sq;
 
+    private GameScheduler gs;
+
     private KitManager km;
 
     private String prefix;
@@ -42,6 +46,7 @@ public class Surf extends JavaPlugin {
         registerEvents();
         registerManagers();
         startSchedulers();
+        registerCommands();
     }
 
     @Override
@@ -49,9 +54,14 @@ public class Surf extends JavaPlugin {
 
     }
 
+    private void registerCommands() {
+        getCommand("nextround").setExecutor(new NextRound(this));
+    }
+
     private void registerEvents() {
         Bukkit.getPluginManager().registerEvents(new BlockEventBlocker(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerEventBlocker(), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryEventBlocker(), this);
         Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
     }
@@ -86,7 +96,7 @@ public class Surf extends JavaPlugin {
     }
 
     private void startSchedulers() {
-        GameScheduler gs = new GameScheduler(this);
+        gs = new GameScheduler(this);
         gs.start();
     }
 
@@ -96,6 +106,10 @@ public class Surf extends JavaPlugin {
 
     public KitQuery getKitQuery() {
         return kq;
+    }
+
+    public GameScheduler getGameScheduler() {
+        return gs;
     }
 
     public KitManager getKitManager() {

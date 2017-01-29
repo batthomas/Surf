@@ -25,29 +25,33 @@ public class GameScheduler implements Runnable {
 
     @Override
     public void run() {
-        switch (time) {
-            case 1500:
-            case 1200:
-            case 900:
-            case 600:
-            case 300:
-                //TODO : new Map
-                plugin.getKitManager().applyKit(plugin.getKitManager().nextKit());
-                break;
-            case 60:
-            case 10:
-            case 5:
-            case 4:
-            case 3:
-            case 2:
-            case 1:
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendMessage(time != 1 ? plugin.getPrefix() + "Der Server startet in " + time + " Sekunden neu" : plugin.getPrefix() + "Der Server startet" + time + " Sekunde");
-                }
-                break;
-            case 0:
-                Bukkit.shutdown();
-                break;
+        if (time % 300 == 0) {
+            plugin.getKitManager().applyKit(plugin.getKitManager().nextKit());
+            Bukkit.broadcastMessage(plugin.getPrefix() + "Das neue Kit heisst " + plugin.getKitManager().getCurrentKit().getName());
+        } else if (time / 100 % 3 == 0) {
+            String end;
+            if (String.valueOf(time).startsWith("1")) {
+                end = String.valueOf(time).substring(2);
+            } else {
+                end = String.valueOf(time).substring(1);
+            }
+            switch (end) {
+                case "10":
+                    Bukkit.broadcastMessage(plugin.getPrefix() + "Das Kit wechselt in " + end + " Sekunden");
+                    break;
+                case "05":
+                case "04":
+                case "03":
+                case "02":
+                case "01":
+
+                    Bukkit.broadcastMessage(plugin.getPrefix() + (Integer.parseInt(end) != 01 ? "Das Kit wechselt in " + end.substring(1) + " Sekunden" : "Das Kit wechselt in " + end.substring(1) + " Sekunde"));
+                    break;
+            }
+        } else if (time < 10) {
+            Bukkit.broadcastMessage(time != 1 ? plugin.getPrefix() + "Der Server startet in " + time + " Sekunden neu" : plugin.getPrefix() + "Der Server startet" + time + " Sekunde");
+        } else if (time == 0) {
+            Bukkit.shutdown();
         }
         time--;
     }
@@ -56,4 +60,16 @@ public class GameScheduler implements Runnable {
         return taskid;
     }
 
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public void nextRound() {
+        if (Math.floor(time / 100) % 3 == 0) {
+            time = ((int) time / 100) * 100 + 10;
+        } else {
+            time = time - 100;
+            nextRound();
+        }
+    }
 }

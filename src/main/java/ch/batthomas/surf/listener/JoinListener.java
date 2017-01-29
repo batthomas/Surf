@@ -4,6 +4,7 @@ import ch.batthomas.surf.Surf;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -23,8 +24,10 @@ public class JoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         try {
-            plugin.getStatsQuery().addPlayer(e.getPlayer());
+            Player player = e.getPlayer();
+            plugin.getStatsQuery().addPlayer(player);
             plugin.getKitManager().applyKit(plugin.getKitManager().getCurrentKit());
+            player.sendMessage(plugin.getPrefix() + "Das aktuelle Kit heisst " + plugin.getKitManager().getCurrentKit().getName());
         } catch (SQLException ex) {
             Logger.getLogger(JoinListener.class.getName()).log(Level.SEVERE, null, ex);
         }
