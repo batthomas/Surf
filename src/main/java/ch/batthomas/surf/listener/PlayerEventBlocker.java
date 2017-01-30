@@ -3,6 +3,7 @@ package ch.batthomas.surf.listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerAchievementAwardedEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
@@ -57,5 +58,10 @@ public class PlayerEventBlocker implements Listener {
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
             e.setCancelled(true);
         }
+    }
+    
+    @EventHandler
+    public void onSaturation(FoodLevelChangeEvent e){
+        e.setCancelled(true);
     }
 }

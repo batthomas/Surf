@@ -26,8 +26,10 @@ public class JoinListener implements Listener {
         try {
             Player player = e.getPlayer();
             plugin.getStatsQuery().addPlayer(player);
+            player.getInventory().clear();
             plugin.getKitManager().applyKit(plugin.getKitManager().getCurrentKit());
             player.sendMessage(plugin.getPrefix() + "Das aktuelle Kit heisst " + plugin.getKitManager().getCurrentKit().getName());
+            e.setJoinMessage(null);
         } catch (SQLException ex) {
             Logger.getLogger(JoinListener.class.getName()).log(Level.SEVERE, null, ex);
         }

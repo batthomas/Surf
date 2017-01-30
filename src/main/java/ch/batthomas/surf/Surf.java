@@ -15,9 +15,12 @@ import ch.batthomas.surf.scheduler.GameScheduler;
 import ch.batthomas.surf.util.ConfigHelper;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -37,10 +40,12 @@ public class Surf extends JavaPlugin {
     private KitManager km;
 
     private String prefix;
+    private Map<Player, Integer> kills;
 
     @Override
     public void onEnable() {
         prefix = "§b§lSurf §r§8| §7";
+        kills = new HashMap<>();
         prepareConfig();
         connectMySQL();
         registerEvents();
@@ -118,5 +123,9 @@ public class Surf extends JavaPlugin {
 
     public String getPrefix() {
         return prefix;
+    }
+    
+    public Map<Player, Integer> getKills(){
+        return kills;
     }
 }

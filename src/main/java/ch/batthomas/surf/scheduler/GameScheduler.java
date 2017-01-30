@@ -2,7 +2,6 @@ package ch.batthomas.surf.scheduler;
 
 import ch.batthomas.surf.Surf;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 /**
  *
