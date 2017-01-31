@@ -64,6 +64,13 @@ public class KillstreakManager {
                     }
                 }
                 break;
+            case 30:
+                Bukkit.broadcastMessage(plugin.getPrefix() + player.getName() + " hat eine 30er Killstreak erreicht");
+                for (Player other : Bukkit.getOnlinePlayers()) {
+                    if (!player.getUniqueId().equals(other.getUniqueId())) {
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 25 * 20, 2));
+                    }
+                }
         }
     }
 }
