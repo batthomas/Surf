@@ -2,6 +2,7 @@ package ch.batthomas.surf.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 import org.bukkit.entity.Player;
 
 /**
@@ -35,13 +36,13 @@ public class StatsQuery {
         }
     }
 
-    public void addStats(Player player, String mode, int amount) throws SQLException {
+    public void addStats(UUID uuid, String mode, int amount) throws SQLException {
         switch (mode) {
             case "kills":
             case "deaths":
                 StringBuilder sb = new StringBuilder();
-                int added = Integer.parseInt(getStats(player, mode)) + amount;
-                sb.append("UPDATE surf_stats SET ").append(mode).append("='").append(added).append("' WHERE uuid='").append(player.getUniqueId()).append("'");
+                int added = Integer.parseInt(getStats(uuid, mode)) + amount;
+                sb.append("UPDATE surf_stats SET ").append(mode).append("='").append(added).append("' WHERE uuid='").append(uuid).append("'");
                 mysql.executeUpdate(sb.toString());
                 break;
             default:
@@ -49,12 +50,12 @@ public class StatsQuery {
         }
     }
 
-    public String getStats(Player player, String mode) throws SQLException {
+    public String getStats(UUID uuid, String mode) throws SQLException {
         switch (mode) {
             case "kills":
             case "deaths":
                 StringBuilder sb = new StringBuilder();
-                sb.append("SELECT ").append(mode).append(" FROM surf_stats WHERE uuid='").append(player.getUniqueId()).append("';");
+                sb.append("SELECT ").append(mode).append(" FROM surf_stats WHERE uuid='").append(uuid).append("';");
                 ResultSet rs = mysql.executeQuery(sb.toString());
                 if (rs.first()) {
                     return rs.getString(1);

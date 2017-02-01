@@ -6,3 +6,4 @@ main: ch.batthomas.surf.Surf
 database: true
 commands:
     nextround:
+    stats:

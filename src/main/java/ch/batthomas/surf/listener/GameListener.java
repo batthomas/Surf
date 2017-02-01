@@ -34,13 +34,13 @@ public class GameListener implements Listener {
         try {
             Player player = e.getEntity();
             Player killer = e.getEntity().getKiller();
-            plugin.getStatsQuery().addStats(player, "deaths", 1);
+            plugin.getStatsQuery().addStats(player.getUniqueId(), "deaths", 1);
             e.getDrops().clear();
             e.setDroppedExp(0);
             e.setDeathMessage(null);
             player.spigot().respawn();
             if (killer != null) {
-                plugin.getStatsQuery().addStats(killer, "kills", 1);
+                plugin.getStatsQuery().addStats(killer.getUniqueId(), "kills", 1);
                 player.sendMessage(plugin.getPrefix() + "Du wurdest von §3" + killer.getName() + " §7getötet!");
                 killer.sendMessage(plugin.getPrefix() + "Du hast §3" + player.getName() + " §7getötet!");
                 ksm.addKill(killer);

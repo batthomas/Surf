@@ -1,6 +1,7 @@
 package ch.batthomas.surf;
 
 import ch.batthomas.surf.command.NextRound;
+import ch.batthomas.surf.command.Stats;
 import ch.batthomas.surf.constant.ConfigConstant;
 import ch.batthomas.surf.database.KitQuery;
 import ch.batthomas.surf.database.MySQLConnector;
@@ -61,6 +62,7 @@ public class Surf extends JavaPlugin {
 
     private void registerCommands() {
         getCommand("nextround").setExecutor(new NextRound(this));
+        getCommand("stats").setExecutor(new Stats(this));
     }
 
     private void registerEvents() {
