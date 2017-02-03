@@ -1,6 +1,7 @@
 name: Surf
 version: 1.0
 description: Surf for Spigot
+load: STARTUP
 author: batthomas
 main: ch.batthomas.surf.Surf
 database: true
@@ -8,3 +9,4 @@ commands:
     nextround:
     stats:
     level:
+        aliases: lvl

@@ -7,9 +7,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +18,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.json.simple.parser.JSONParser;
 
 /**
  *
@@ -71,7 +70,7 @@ public class Stats implements CommandExecutor {
     private double calculateKD(UUID uuid) throws SQLException {
         double kills = Double.parseDouble(plugin.getStatsQuery().getStats(uuid, "kills"));
         double deaths = Double.parseDouble(plugin.getStatsQuery().getStats(uuid, "deaths"));
-        return kills / deaths;
+        return Double.parseDouble(new DecimalFormat("##.##").format(kills / deaths));
     }
 
     private UUID lookupUUID(String name) {
@@ -90,7 +89,7 @@ public class Stats implements CommandExecutor {
                 in.close();
                 Gson gson = new Gson();
                 String rawuuid = gson.fromJson(response.toString(), JsonObject.class).get("id").getAsString();
-                String uuid = rawuuid.replaceFirst( "([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5" );
+                String uuid = rawuuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5");
                 return UUID.fromString(uuid);
             } else {
                 return null;

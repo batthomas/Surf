@@ -1,7 +1,15 @@
 package ch.batthomas.surf.command;
 
 import ch.batthomas.surf.Surf;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.SQLException;
+import java.util.UUID;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -29,15 +37,59 @@ public class Level implements CommandExecutor {
         }
         Player player = (Player) cs;
         if (cmd.getName().equalsIgnoreCase("level")) {
-            try {
-                player.sendMessage(plugin.getPrefix() + "Noch " + plugin.getLevelCalculator().getDistanceToLevel(player) + " Kills bis zum nächsten Level");
-                player.sendMessage(plugin.getPrefix() + "Level Fortschritt:");
-                player.sendMessage(plugin.getPrefix() + "Dein Level: " + plugin.getLevelCalculator().getLevel(player));
-            } catch (SQLException ex) {
-                Logger.getLogger(Level.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            if (args != null && args.length > 0) {
+                UUID uuid = lookupUUID(args[0]);
+                if (uuid != null) {
+                    try {
+                        player.sendMessage(plugin.getPrefix() + "§l- §6Level von " + args[0] + " §7-");
+                        player.sendMessage("           §7● §6Level§7: " + plugin.getLevelCalculator().getLevel(uuid));
+                        player.sendMessage("           §7● §6Fortschritt§7: " + plugin.getLevelCalculator().getPercentToLevel(uuid) + "%");
+                        player.sendMessage("           §7● §6Nächstes Level§7: " + plugin.getLevelCalculator().getDistanceToLevel(uuid) + " Kills");
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Level.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    }
+                } else {
+                    player.sendMessage(plugin.getPrefix() + "Dieser Spieler wurde nicht gefunden");
+                }
+            } else {
+                try {
+                    player.sendMessage(plugin.getPrefix() + "§l- §6Level von " + player.getName() + " §7-");
+                    player.sendMessage("           §7● §6Level§7: " + plugin.getLevelCalculator().getLevel(player));
+                    player.sendMessage("           §7● §6Fortschritt§7: " + plugin.getLevelCalculator().getPercentToLevel(player.getUniqueId()) + "%");
+                    player.sendMessage("           §7● §6Nächstes Level§7: " + plugin.getLevelCalculator().getDistanceToLevel(player.getUniqueId()) + " Kills");
+                } catch (SQLException ex) {
+                    Logger.getLogger(Level.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                }
             }
         }
         return false;
+    }
+
+    private UUID lookupUUID(String name) {
+        try {
+            URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + name);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+            if (con.getResponseCode() == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                Gson gson = new Gson();
+                String rawuuid = gson.fromJson(response.toString(), JsonObject.class).get("id").getAsString();
+                String uuid = rawuuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5");
+                return UUID.fromString(uuid);
+            } else {
+                return null;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Stats.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
 }
