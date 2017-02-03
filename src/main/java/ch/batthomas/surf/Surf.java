@@ -14,14 +14,12 @@ import ch.batthomas.surf.listener.PlayerEventBlocker;
 import ch.batthomas.surf.manager.KitManager;
 import ch.batthomas.surf.scheduler.GameScheduler;
 import ch.batthomas.surf.util.ConfigHelper;
+import ch.batthomas.surf.util.LevelCalculator;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -39,14 +37,13 @@ public class Surf extends JavaPlugin {
     private GameScheduler gs;
 
     private KitManager km;
+    private LevelCalculator lc;
 
     private String prefix;
-    private Map<Player, Integer> kills;
 
     @Override
     public void onEnable() {
         prefix = "§b§lSurf §r§8| §7";
-        kills = new HashMap<>();
         prepareConfig();
         connectMySQL();
         registerEvents();
@@ -63,6 +60,8 @@ public class Surf extends JavaPlugin {
     private void registerCommands() {
         getCommand("nextround").setExecutor(new NextRound(this));
         getCommand("stats").setExecutor(new Stats(this));
+        getCommand("level").setExecutor(new ch.batthomas.surf.command.Level(this));
+
     }
 
     private void registerEvents() {
@@ -76,6 +75,7 @@ public class Surf extends JavaPlugin {
     private void registerManagers() {
         try {
             km = new KitManager(this);
+            lc = new LevelCalculator(this);
         } catch (SQLException ex) {
             Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,11 +123,11 @@ public class Surf extends JavaPlugin {
         return km;
     }
 
+    public LevelCalculator getLevelCalculator() {
+        return lc;
+    }
+
     public String getPrefix() {
         return prefix;
-    }
-    
-    public Map<Player, Integer> getKills(){
-        return kills;
     }
 }

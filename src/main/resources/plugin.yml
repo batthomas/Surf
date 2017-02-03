@@ -7,3 +7,4 @@ database: true
 commands:
     nextround:
     stats:
+    level:

@@ -41,6 +41,7 @@ public class GameListener implements Listener {
             player.spigot().respawn();
             if (killer != null) {
                 plugin.getStatsQuery().addStats(killer.getUniqueId(), "kills", 1);
+                plugin.getLevelCalculator().calculateLevel(killer);
                 player.sendMessage(plugin.getPrefix() + "Du wurdest von §3" + killer.getName() + " §7getötet!");
                 killer.sendMessage(plugin.getPrefix() + "Du hast §3" + player.getName() + " §7getötet!");
                 ksm.addKill(killer);

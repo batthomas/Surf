@@ -24,7 +24,6 @@ public class KillstreakManager {
 
     public void addKill(Player player) {
         kills.put(player, kills.get(player) != null ? kills.get(player) + 1 : 1);
-        System.err.println(kills.get(player));
         handleKills(player);
     }
 
@@ -36,39 +35,38 @@ public class KillstreakManager {
         switch (kills.get(player)) {
             case 5:
                 Bukkit.broadcastMessage(plugin.getPrefix() + player.getName() + " hat eine 5er Killstreak erreicht");
-
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 25 * 20, 2));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 25 * 20, 3));
                 break;
             case 10:
                 Bukkit.broadcastMessage(plugin.getPrefix() + player.getName() + " hat eine 10er Killstreak erreicht");
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 25 * 20, 2));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 25 * 20, 3));
                 break;
             case 15:
                 Bukkit.broadcastMessage(plugin.getPrefix() + player.getName() + " hat eine 15er Killstreak erreicht");
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 25 * 20, 2));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 25 * 20, 3));
                 break;
             case 20:
                 Bukkit.broadcastMessage(plugin.getPrefix() + player.getName() + " hat eine 20er Killstreak erreicht");
                 for (Player other : Bukkit.getOnlinePlayers()) {
-                    if (!player.getUniqueId().equals(other.getUniqueId())) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 25 * 20, 2));
+                    if (!player.equals(other)) {
+                        other.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 25 * 20, 1));
                     }
                 }
                 break;
             case 25:
                 Bukkit.broadcastMessage(plugin.getPrefix() + player.getName() + " hat eine 25er Killstreak erreicht");
                 for (Player other : Bukkit.getOnlinePlayers()) {
-                    if (!player.getUniqueId().equals(other.getUniqueId())) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 25 * 20, 2));
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 25 * 20, 2));
+                    if (!player.equals(other)) {
+                        other.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 25 * 20, 3));
+                        other.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 25 * 20, 3));
                     }
                 }
                 break;
             case 30:
                 Bukkit.broadcastMessage(plugin.getPrefix() + player.getName() + " hat eine 30er Killstreak erreicht");
                 for (Player other : Bukkit.getOnlinePlayers()) {
-                    if (!player.getUniqueId().equals(other.getUniqueId())) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 25 * 20, 2));
+                    if (!player.equals(other)) {
+                        other.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 25 * 20, 1));
                     }
                 }
         }
