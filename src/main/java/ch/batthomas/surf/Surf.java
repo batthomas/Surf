@@ -12,6 +12,7 @@ import ch.batthomas.surf.listener.InventoryEventBlocker;
 import ch.batthomas.surf.listener.JoinListener;
 import ch.batthomas.surf.listener.PlayerEventBlocker;
 import ch.batthomas.surf.manager.KitManager;
+import ch.batthomas.surf.manager.WorldManager;
 import ch.batthomas.surf.scheduler.GameScheduler;
 import ch.batthomas.surf.util.ConfigHelper;
 import ch.batthomas.surf.util.LevelCalculator;
@@ -37,6 +38,7 @@ public class Surf extends JavaPlugin {
     private GameScheduler gs;
 
     private KitManager km;
+    private WorldManager wm;
     private LevelCalculator lc;
 
     private String prefix;
@@ -75,8 +77,11 @@ public class Surf extends JavaPlugin {
     private void registerManagers() {
         try {
             km = new KitManager(this);
+            km.nextKit();
             lc = new LevelCalculator(this);
-        } catch (SQLException ex) {
+            wm = new WorldManager(this);
+            wm.nextWorld();
+        } catch (SQLException | IOException ex) {
             Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -121,6 +126,10 @@ public class Surf extends JavaPlugin {
 
     public KitManager getKitManager() {
         return km;
+    }
+
+    public WorldManager getWorldManager() {
+        return wm;
     }
 
     public LevelCalculator getLevelCalculator() {

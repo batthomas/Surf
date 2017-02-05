@@ -15,7 +15,7 @@ public class GameScheduler implements Runnable {
 
     public GameScheduler(Surf plugin) {
         this.plugin = plugin;
-        time = 1500;
+        time = 1499;
     }
 
     public void start() {
@@ -26,6 +26,8 @@ public class GameScheduler implements Runnable {
     public void run() {
         if (time % 300 == 0) {
             plugin.getKitManager().applyKit(plugin.getKitManager().nextKit());
+            plugin.getWorldManager().nextWorld();
+            plugin.getWorldManager().teleportPlayers();
             Bukkit.broadcastMessage(plugin.getPrefix() + "Das neue Kit heisst " + plugin.getKitManager().getCurrentKit().getName());
         } else if (time / 100 % 3 == 0) {
             String end;

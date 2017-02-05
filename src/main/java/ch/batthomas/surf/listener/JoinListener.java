@@ -25,6 +25,7 @@ public class JoinListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         try {
             Player player = e.getPlayer();
+            plugin.getWorldManager().teleportPlayer(player);
             plugin.getStatsQuery().addPlayer(player);
             player.getInventory().clear();
             plugin.getKitManager().applyKit(plugin.getKitManager().getCurrentKit());
