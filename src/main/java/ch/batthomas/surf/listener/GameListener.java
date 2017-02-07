@@ -9,9 +9,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.util.Vector;
 
 /**
@@ -38,6 +40,7 @@ public class GameListener implements Listener {
             e.getDrops().clear();
             e.setDroppedExp(0);
             e.setDeathMessage(null);
+            plugin.getWorldManager().teleportPlayer(player);
             player.spigot().respawn();
             if (killer != null) {
                 plugin.getStatsQuery().addStats(killer.getUniqueId(), "kills", 1);
@@ -55,15 +58,34 @@ public class GameListener implements Listener {
     }
 
     @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        e.setRespawnLocation(plugin.getWorldManager().getSpawnLocation());
+    }
+
+    @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         if (player.getLocation().getBlock().getType() == Material.STATIONARY_WATER || player.getLocation().getBlock().getType() == Material.WATER) {
             player.setVelocity(new Vector(player.getLocation().getDirection().getX() * 1.8D, 3.0D, player.getLocation().getDirection().getZ() * 1.8D));
         }
     }
-    
+
     @EventHandler
-    public void onQuit(PlayerQuitEvent e){
+    public void onQuit(PlayerQuitEvent e) {
         ksm.removePlayer(e.getPlayer());
     }
+
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent e) {
+        if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
+            Player player = (Player) e.getEntity();
+            Player damager = (Player) e.getDamager();
+            if (player.getLocation().getY() + 2 >= plugin.getWorldManager().getFromConfig("safezone.y")) {
+                if (damager.getLocation().getY() + 2 >= plugin.getWorldManager().getFromConfig("safezone.y")) {
+                    e.setCancelled(true);
+                }
+            }
+        }
+    }
+    
 }

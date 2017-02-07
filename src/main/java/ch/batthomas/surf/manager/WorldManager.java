@@ -4,6 +4,7 @@ import ch.batthomas.surf.Surf;
 import ch.batthomas.surf.util.ConfigHelper;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,11 +40,12 @@ public class WorldManager {
         }
         for (File file : root.listFiles()) {
             if (file.isFile()) {
-                System.err.println(" -------------- " + file.getName().split("\\.")[0]);
-                World world = Bukkit.createWorld(new WorldCreator(file.getName().split("\\.")[0]));
-                if (world != null) {
-                    System.err.println(" ---------- ");
-                    worlds.put(world, new ConfigHelper("worlds/" + world.getName(), plugin));
+                if (new File(Bukkit.getWorldContainer() + "/" + file.getName().split("\\.")[0]).exists()) {
+                    World world = Bukkit.createWorld(new WorldCreator(file.getName().split("\\.")[0]));
+                    if (world != null) {
+                        System.err.println("DEBUG - Worldname: " + world.getName());
+                        worlds.put(world, new ConfigHelper("worlds/" + world.getName(), plugin));
+                    }
                 }
             }
         }
@@ -56,7 +58,6 @@ public class WorldManager {
         Random random = new Random(System.currentTimeMillis());
         List<World> list = new ArrayList<>(worlds.keySet());
         worlds.remove(currentWorld);
-        System.err.println(list.size() + " " + worlds.size());
         currentWorld = list.get(list.size() == 1 ? 0 : random.nextInt(list.size() - 1));
     }
 
@@ -69,8 +70,12 @@ public class WorldManager {
             player.teleport(new Location(currentWorld, getFromConfig("spawn.x"), getFromConfig("spawn.y"), getFromConfig("spawn.z"), getFromConfig("spawn.yaw"), getFromConfig("spawn.pitch")));
         }
     }
+    
+    public Location getSpawnLocation(){
+        return new Location(currentWorld, getFromConfig("spawn.x"), getFromConfig("spawn.y"), getFromConfig("spawn.z"), getFromConfig("spawn.yaw"), getFromConfig("spawn.pitch"));
+    }
 
-    private float getFromConfig(String path) {
+    public float getFromConfig(String path) {
         ConfigHelper config = worlds.get(currentWorld);
         return Float.parseFloat(config.getConfig().getString(path));
     }
