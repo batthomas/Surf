@@ -44,7 +44,7 @@ public class GameListener implements Listener {
             player.spigot().respawn();
             if (killer != null) {
                 plugin.getStatsQuery().addStats(killer.getUniqueId(), "kills", 1);
-                plugin.getLevelCalculator().calculateLevel(killer);
+                plugin.getLevelManager().calculateLevel(killer);
                 player.sendMessage(plugin.getPrefix() + "Du wurdest von §3" + killer.getName() + " §7getötet!");
                 killer.sendMessage(plugin.getPrefix() + "Du hast §3" + player.getName() + " §7getötet!");
                 ksm.addKill(killer);
@@ -60,14 +60,6 @@ public class GameListener implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         e.setRespawnLocation(plugin.getWorldManager().getSpawnLocation());
-    }
-
-    @EventHandler
-    public void onMove(PlayerMoveEvent e) {
-        Player player = e.getPlayer();
-        if (player.getLocation().getBlock().getType() == Material.STATIONARY_WATER || player.getLocation().getBlock().getType() == Material.WATER) {
-            player.setVelocity(new Vector(player.getLocation().getDirection().getX() * 1.8D, 3.0D, player.getLocation().getDirection().getZ() * 1.8D));
-        }
     }
 
     @EventHandler
@@ -87,5 +79,5 @@ public class GameListener implements Listener {
             }
         }
     }
-    
+
 }

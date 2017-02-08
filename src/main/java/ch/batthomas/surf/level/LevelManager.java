@@ -1,4 +1,4 @@
-package ch.batthomas.surf.util;
+package ch.batthomas.surf.level;
 
 import ch.batthomas.surf.Surf;
 import java.sql.SQLException;
@@ -12,14 +12,16 @@ import org.bukkit.entity.Player;
  *
  * @author batthomas
  */
-public class LevelCalculator {
+public class LevelManager {
 
     private final Surf plugin;
     private final Map<UUID, Integer> levels;
+    private LevelBenefits benefits;
 
-    public LevelCalculator(Surf plugin) {
+    public LevelManager(Surf plugin) {
         this.plugin = plugin;
         levels = new HashMap<>();
+        benefits = new LevelBenefits(this);
     }
 
     public void calculateLevel(UUID uuid) throws SQLException {
@@ -103,5 +105,9 @@ public class LevelCalculator {
             calculateLevel(uuid);
         }
         return levels.get(uuid);
+    }
+
+    public LevelBenefits getBenefits() {
+        return benefits;
     }
 }

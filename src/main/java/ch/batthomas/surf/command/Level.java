@@ -42,9 +42,9 @@ public class Level implements CommandExecutor {
                 if (uuid != null) {
                     try {
                         player.sendMessage(plugin.getPrefix() + "§l- §6Level von " + args[0] + " §7-");
-                        player.sendMessage("           §7● §6Level§7: " + plugin.getLevelCalculator().getLevel(uuid));
-                        player.sendMessage("           §7● §6Fortschritt§7: " + plugin.getLevelCalculator().getPercentToLevel(uuid) + "%");
-                        player.sendMessage("           §7● §6Nächstes Level§7: " + plugin.getLevelCalculator().getDistanceToLevel(uuid) + " Kills");
+                        player.sendMessage("           §7● §6Level§7: " + plugin.getLevelManager().getLevel(uuid));
+                        player.sendMessage("           §7● §6Fortschritt§7: " + plugin.getLevelManager().getPercentToLevel(uuid) + "%");
+                        player.sendMessage("           §7● §6Nächstes Level§7: " + plugin.getLevelManager().getDistanceToLevel(uuid) + " Kills");
                     } catch (SQLException ex) {
                         Logger.getLogger(Level.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
@@ -54,9 +54,9 @@ public class Level implements CommandExecutor {
             } else {
                 try {
                     player.sendMessage(plugin.getPrefix() + "§l- §6Level von " + player.getName() + " §7-");
-                    player.sendMessage("           §7● §6Level§7: " + plugin.getLevelCalculator().getLevel(player));
-                    player.sendMessage("           §7● §6Fortschritt§7: " + plugin.getLevelCalculator().getPercentToLevel(player.getUniqueId()) + "%");
-                    player.sendMessage("           §7● §6Nächstes Level§7: " + plugin.getLevelCalculator().getDistanceToLevel(player.getUniqueId()) + " Kills");
+                    player.sendMessage("           §7● §6Level§7: " + plugin.getLevelManager().getLevel(player));
+                    player.sendMessage("           §7● §6Fortschritt§7: " + plugin.getLevelManager().getPercentToLevel(player.getUniqueId()) + "%");
+                    player.sendMessage("           §7● §6Nächstes Level§7: " + plugin.getLevelManager().getDistanceToLevel(player.getUniqueId()) + " Kills");
                 } catch (SQLException ex) {
                     Logger.getLogger(Level.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }

@@ -4,10 +4,14 @@ import ch.batthomas.surf.Surf;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 /**
  *

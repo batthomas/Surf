@@ -10,12 +10,13 @@ import ch.batthomas.surf.listener.BlockEventBlocker;
 import ch.batthomas.surf.listener.GameListener;
 import ch.batthomas.surf.listener.InventoryEventBlocker;
 import ch.batthomas.surf.listener.JoinListener;
+import ch.batthomas.surf.listener.MoveListener;
 import ch.batthomas.surf.listener.PlayerEventBlocker;
 import ch.batthomas.surf.manager.KitManager;
 import ch.batthomas.surf.manager.WorldManager;
 import ch.batthomas.surf.scheduler.GameScheduler;
 import ch.batthomas.surf.util.ConfigHelper;
-import ch.batthomas.surf.util.LevelCalculator;
+import ch.batthomas.surf.level.LevelManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -29,7 +30,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class Surf extends JavaPlugin {
 
-    private ConfigHelper config;
     private MySQLConnector mysql;
 
     private KitQuery kq;
@@ -39,7 +39,7 @@ public class Surf extends JavaPlugin {
 
     private KitManager km;
     private WorldManager wm;
-    private LevelCalculator lc;
+    private LevelManager lc;
 
     private String prefix;
 
@@ -72,13 +72,14 @@ public class Surf extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryEventBlocker(), this);
         Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new MoveListener(this), this);
     }
 
     private void registerManagers() {
         try {
             km = new KitManager(this);
             km.nextKit();
-            lc = new LevelCalculator(this);
+            lc = new LevelManager(this);
             wm = new WorldManager(this);
             wm.nextWorld();
         } catch (SQLException | IOException ex) {
@@ -90,7 +91,7 @@ public class Surf extends JavaPlugin {
         try {
             ConfigConstant cons = new ConfigConstant();
             cons.initializeContent();
-            config = new ConfigHelper("config", cons, this);
+            ConfigHelper config = new ConfigHelper("config", cons, this);
         } catch (IOException ex) {
             Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -132,7 +133,7 @@ public class Surf extends JavaPlugin {
         return wm;
     }
 
-    public LevelCalculator getLevelCalculator() {
+    public LevelManager getLevelManager() {
         return lc;
     }
 
