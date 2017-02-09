@@ -2,9 +2,7 @@ package ch.batthomas.surf.util;
 
 import ch.batthomas.surf.Surf;
 import ch.batthomas.surf.constant.Constant;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import org.bukkit.configuration.file.YamlConfiguration;
 

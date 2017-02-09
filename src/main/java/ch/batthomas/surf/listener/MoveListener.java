@@ -1,6 +1,7 @@
 package ch.batthomas.surf.listener;
 
 import ch.batthomas.surf.Surf;
+import ch.batthomas.surf.util.BedrockItems;
 import ch.batthomas.surf.util.Cooldown;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -19,10 +20,12 @@ import org.bukkit.util.Vector;
 public class MoveListener implements Listener {
 
     private final Cooldown cooldown;
+    private final BedrockItems bedrock;
     private final Surf plugin;
 
     public MoveListener(Surf plugin) {
         cooldown = new Cooldown();
+        bedrock = new BedrockItems();
         this.plugin = plugin;
     }
 
@@ -36,6 +39,7 @@ public class MoveListener implements Listener {
                 try {
                     cooldown.addPlayer(player, plugin.getLevelManager().getBenefits().getCooldown(player));
                     player.sendMessage(plugin.getPrefix() + "Du hast eine Überraschung erhalten");
+                    player.getInventory().addItem(bedrock.getRandomItem());
                 } catch (SQLException ex) {
                     Logger.getLogger(MoveListener.class.getName()).log(Level.SEVERE, null, ex);
                 }

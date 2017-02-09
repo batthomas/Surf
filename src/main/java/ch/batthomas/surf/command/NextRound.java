@@ -14,8 +14,8 @@ import org.bukkit.entity.Player;
 public class NextRound implements CommandExecutor {
 
     private final Surf plugin;
-    
-    public NextRound(Surf plugin){
+
+    public NextRound(Surf plugin) {
         this.plugin = plugin;
     }
 
@@ -26,12 +26,12 @@ public class NextRound implements CommandExecutor {
             return false;
         }
         Player player = (Player) cs;
-        if(cmd.getName().equalsIgnoreCase("nextround")){
-            if(player.hasPermission("ttt.nextround")){
+        if (cmd.getName().equalsIgnoreCase("nextround")) {
+            if (player.hasPermission("ttt.nextround")) {
                 plugin.getGameScheduler().nextRound();
                 player.sendMessage(plugin.getPrefix() + "Du hast eine neue Runde gestartet");
                 return true;
-            }else{
+            } else {
                 player.sendMessage(plugin.getPrefix() + "Du hast keine Rechte für diesen Command");
             }
         }

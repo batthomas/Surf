@@ -16,7 +16,7 @@ public class LevelManager {
 
     private final Surf plugin;
     private final Map<UUID, Integer> levels;
-    private LevelBenefits benefits;
+    private final LevelBenefits benefits;
 
     public LevelManager(Surf plugin) {
         this.plugin = plugin;

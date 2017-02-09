@@ -17,6 +17,7 @@ import ch.batthomas.surf.manager.WorldManager;
 import ch.batthomas.surf.scheduler.GameScheduler;
 import ch.batthomas.surf.util.ConfigHelper;
 import ch.batthomas.surf.level.LevelManager;
+import ch.batthomas.surf.listener.InteractListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -63,7 +64,6 @@ public class Surf extends JavaPlugin {
         getCommand("nextround").setExecutor(new NextRound(this));
         getCommand("stats").setExecutor(new Stats(this));
         getCommand("level").setExecutor(new ch.batthomas.surf.command.Level(this));
-
     }
 
     private void registerEvents() {
@@ -73,6 +73,7 @@ public class Surf extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JoinListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new MoveListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new InteractListener(this), this);
     }
 
     private void registerManagers() {
