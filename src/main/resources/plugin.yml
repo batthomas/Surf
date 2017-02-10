@@ -8,5 +8,7 @@ database: true
 commands:
     nextround:
     stats:
+    setup:
+    setspawn:
     level:
         aliases: lvl

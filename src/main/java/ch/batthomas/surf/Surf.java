@@ -1,6 +1,8 @@
 package ch.batthomas.surf;
 
 import ch.batthomas.surf.command.NextRound;
+import ch.batthomas.surf.command.SetSpawn;
+import ch.batthomas.surf.command.Setup;
 import ch.batthomas.surf.command.Stats;
 import ch.batthomas.surf.constant.ConfigConstant;
 import ch.batthomas.surf.database.KitQuery;
@@ -18,6 +20,7 @@ import ch.batthomas.surf.scheduler.GameScheduler;
 import ch.batthomas.surf.util.ConfigHelper;
 import ch.batthomas.surf.level.LevelManager;
 import ch.batthomas.surf.listener.InteractListener;
+import ch.batthomas.surf.util.GameState;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -43,10 +46,12 @@ public class Surf extends JavaPlugin {
     private LevelManager lc;
 
     private String prefix;
+    private GameState state;
 
     @Override
     public void onEnable() {
         prefix = "§b§lSurf §r§8| §7";
+        state = GameState.INGAME;
         prepareConfig();
         connectMySQL();
         registerEvents();
@@ -64,6 +69,8 @@ public class Surf extends JavaPlugin {
         getCommand("nextround").setExecutor(new NextRound(this));
         getCommand("stats").setExecutor(new Stats(this));
         getCommand("level").setExecutor(new ch.batthomas.surf.command.Level(this));
+        getCommand("setup").setExecutor(new Setup(this));
+        getCommand("setspawn").setExecutor(new SetSpawn(this));
     }
 
     private void registerEvents() {
@@ -140,5 +147,13 @@ public class Surf extends JavaPlugin {
 
     public String getPrefix() {
         return prefix;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
     }
 }

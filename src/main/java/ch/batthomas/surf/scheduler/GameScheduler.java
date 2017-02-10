@@ -45,7 +45,6 @@ public class GameScheduler implements Runnable {
                 case "03":
                 case "02":
                 case "01":
-
                     Bukkit.broadcastMessage(plugin.getPrefix() + (Integer.parseInt(end) != 01 ? "Das Kit wechselt in " + end.substring(1) + " Sekunden" : "Das Kit wechselt in " + end.substring(1) + " Sekunde"));
                     break;
             }
