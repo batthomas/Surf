@@ -69,8 +69,8 @@ public class WorldManager {
             player.teleport(new Location(currentWorld, getFromConfig("spawn.x"), getFromConfig("spawn.y"), getFromConfig("spawn.z"), getFromConfig("spawn.yaw"), getFromConfig("spawn.pitch")));
         }
     }
-    
-    public Location getSpawnLocation(){
+
+    public Location getSpawnLocation() {
         return new Location(currentWorld, getFromConfig("spawn.x"), getFromConfig("spawn.y"), getFromConfig("spawn.z"), getFromConfig("spawn.yaw"), getFromConfig("spawn.pitch"));
     }
 

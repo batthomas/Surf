@@ -27,7 +27,7 @@ public class NextRound implements CommandExecutor {
         }
         Player player = (Player) cs;
         if (cmd.getName().equalsIgnoreCase("nextround")) {
-            if (player.hasPermission("ttt.nextround")) {
+            if (player.hasPermission("surf.nextround")) {
                 plugin.getGameScheduler().nextRound();
                 player.sendMessage(plugin.getPrefix() + "Du hast eine neue Runde gestartet");
                 return true;
