@@ -32,6 +32,6 @@ Die Überraschungen erhält man sobald man über einen Bedrockblock läuft.
 ===
 
 ###  Installation
-Für die Nutzung dieses Plugins ist ein Spigot 1.11 Server und eine MySQL Datenbank erforderlich. Zuerst kopiert man das Plugin in das zugehörige Verzeichnis und kopiert 5 Maps in den WorldContainer. Danach startet man den Server, der ohne gültige Maps im Setupmode startet, und konfiguriert mit den Commands (/setup \<goto> und /setconfig) die Maps. Am Ende muss man nur noch die Kits konfigurieren und den Server restarten. Falls etwas noch nicht konfiguriert worden ist, startet der Server im Setupmode.
+Für die Nutzung dieses Plugins ist ein Spigot 1.11.2 Server und eine MySQL Datenbank erforderlich. Zuerst kopiert man das Plugin in das zugehörige Verzeichnis und kopiert 5 Maps in den WorldContainer. Danach startet man den Server, der ohne gültige Maps im Setupmode startet, und konfiguriert mit den Commands (/setup \<goto> und /setconfig) die Maps. Am Ende muss man nur noch die Kits konfigurieren und den Server restarten. Falls etwas noch nicht konfiguriert worden ist, startet der Server im Setupmode.
 
 
