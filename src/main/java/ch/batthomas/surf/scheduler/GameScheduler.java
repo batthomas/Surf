@@ -24,12 +24,12 @@ public class GameScheduler implements Runnable {
 
     @Override
     public void run() {
-        if (time % 300 == 0) {
+        if (time % 300 == 0 && time != 0) {
             plugin.getKitManager().applyKit(plugin.getKitManager().nextKit());
             plugin.getWorldManager().nextWorld();
             plugin.getWorldManager().teleportPlayers();
             Bukkit.broadcastMessage(plugin.getPrefix() + "Das neue Kit heisst " + plugin.getKitManager().getCurrentKit().getName());
-        } else if (time / 100 % 3 == 0) {
+        } else if (time / 100 % 3 == 0 && time / 100 != 0 ) {
             String end;
             if (String.valueOf(time).startsWith("1")) {
                 end = String.valueOf(time).substring(2);
@@ -49,7 +49,7 @@ public class GameScheduler implements Runnable {
                     break;
             }
         } else if (time < 10) {
-            Bukkit.broadcastMessage(time != 1 ? plugin.getPrefix() + "Der Server startet in " + time + " Sekunden neu" : plugin.getPrefix() + "Der Server startet" + time + " Sekunde");
+            Bukkit.broadcastMessage(time != 1 ? plugin.getPrefix() + "Der Server startet in " + time + " Sekunden neu" : plugin.getPrefix() + "Der Server startet " + time + " Sekunde");
         } else if (time == 0) {
             Bukkit.shutdown();
         }

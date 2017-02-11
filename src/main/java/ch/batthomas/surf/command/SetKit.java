@@ -37,7 +37,7 @@ public class SetKit implements CommandExecutor {
                     try {
                         Kit kit = new Kit(args[0]);
                         for (int i = 0; i < 9; i++) {
-                            kit.addItem("slot" + i, player.getInventory().getItem(i));
+                            kit.addItem("slot" + (i + 1), player.getInventory().getItem(i));
                         }
                         kit.addItem("helmet", player.getInventory().getHelmet());
                         kit.addItem("chestplate", player.getInventory().getChestplate());

@@ -25,7 +25,7 @@ public class KitQuery {
 
     public void addKit(Kit kit) throws SQLException {
         StringBuilder sb = new StringBuilder();
-        sb.append("INSERT INTO surf_kits (name, slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9, helmet, chestplate, leggings, boots)");
+        sb.append("INSERT IGNORE INTO surf_kits (name, slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9, helmet, chestplate, leggings, boots)");
         sb.append("VALUES (");
         sb.append("'").append(kit.getName()).append("'").append(", ");
         for (int i = 1; i < 10; i++) {
