@@ -47,7 +47,8 @@ public class SetKit implements CommandExecutor {
                         player.sendMessage(plugin.getPrefix() + "Dein Kit wurde erfolgreich erstellt");
                         return true;
                     } catch (SQLException ex) {
-                        Logger.getLogger(SetKit.class.getName()).log(Level.SEVERE, null, ex);
+                        player.sendMessage(plugin.getPrefix() + "Dein Kit existiert bereits");
+                        return false;
                     }
                 }
                 player.sendMessage(plugin.getPrefix() + "Bitte nutze /setkit <name> im Setupmode");
