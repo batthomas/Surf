@@ -1,10 +1,10 @@
 package ch.batthomas.surf;
 
 import ch.batthomas.surf.command.NextRound;
+import ch.batthomas.surf.command.SetKit;
 import ch.batthomas.surf.command.SetSpawn;
 import ch.batthomas.surf.command.Setup;
 import ch.batthomas.surf.command.Stats;
-import ch.batthomas.surf.constant.ConfigConstant;
 import ch.batthomas.surf.database.KitQuery;
 import ch.batthomas.surf.database.MySQLConnector;
 import ch.batthomas.surf.database.StatsQuery;
@@ -17,7 +17,6 @@ import ch.batthomas.surf.listener.PlayerEventBlocker;
 import ch.batthomas.surf.manager.KitManager;
 import ch.batthomas.surf.manager.WorldManager;
 import ch.batthomas.surf.scheduler.GameScheduler;
-import ch.batthomas.surf.util.ConfigHelper;
 import ch.batthomas.surf.level.LevelManager;
 import ch.batthomas.surf.listener.InteractListener;
 import ch.batthomas.surf.util.GameState;
@@ -52,12 +51,13 @@ public class Surf extends JavaPlugin {
     public void onEnable() {
         prefix = "§b§lSurf §r§8| §7";
         state = GameState.INGAME;
-        prepareConfig();
         connectMySQL();
+        registerCommands();
         registerEvents();
         registerManagers();
-        startSchedulers();
-        registerCommands();
+        if (state != GameState.SETUP) {
+            startSchedulers();
+        }
     }
 
     @Override
@@ -71,6 +71,7 @@ public class Surf extends JavaPlugin {
         getCommand("level").setExecutor(new ch.batthomas.surf.command.Level(this));
         getCommand("setup").setExecutor(new Setup(this));
         getCommand("setspawn").setExecutor(new SetSpawn(this));
+        getCommand("setkit").setExecutor(new SetKit(this));
     }
 
     private void registerEvents() {
@@ -91,16 +92,6 @@ public class Surf extends JavaPlugin {
             wm = new WorldManager(this);
             wm.nextWorld();
         } catch (SQLException | IOException ex) {
-            Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void prepareConfig() {
-        try {
-            ConfigConstant cons = new ConfigConstant();
-            cons.initializeContent();
-            ConfigHelper config = new ConfigHelper("config", cons, this);
-        } catch (IOException ex) {
             Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

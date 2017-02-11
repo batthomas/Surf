@@ -1,6 +1,7 @@
 package ch.batthomas.surf.manager;
 
 import ch.batthomas.surf.Surf;
+import ch.batthomas.surf.util.GameState;
 import ch.batthomas.surf.util.Kit;
 import java.sql.SQLException;
 import java.util.List;
@@ -21,6 +22,7 @@ public class KitManager {
     public KitManager(Surf plugin) throws SQLException {
         kits = plugin.getKitQuery().getKits();
         this.plugin = plugin;
+        checkArray();
     }
 
     public Kit nextKit() {
@@ -49,5 +51,12 @@ public class KitManager {
 
     public Kit getCurrentKit() {
         return currentKit;
+    }
+
+    private void checkArray() {
+        if (kits.size() < 5) {
+            plugin.setState(GameState.SETUP);
+            System.err.println("Der Server wurde im Setupmode gestartet. Zu wenige Kits wurden geladen.");
+        }
     }
 }

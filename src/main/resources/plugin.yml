@@ -10,5 +10,6 @@ commands:
     stats:
     setup:
     setspawn:
+    setkit:
     level:
         aliases: lvl

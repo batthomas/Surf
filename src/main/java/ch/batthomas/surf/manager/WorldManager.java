@@ -2,6 +2,7 @@ package ch.batthomas.surf.manager;
 
 import ch.batthomas.surf.Surf;
 import ch.batthomas.surf.util.ConfigHelper;
+import ch.batthomas.surf.util.GameState;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -48,6 +50,10 @@ public class WorldManager {
                 }
             }
         }
+        if(worlds.size() < 5){
+            plugin.setState(GameState.SETUP);
+            System.err.println("Der Server wurde im Setupmode gestartet. Zu wenige Maps wurden geladen.");
+        }
     }
 
     public void nextWorld() {
@@ -56,8 +62,8 @@ public class WorldManager {
         }
         Random random = new Random(System.currentTimeMillis());
         List<World> list = new ArrayList<>(worlds.keySet());
-        worlds.remove(currentWorld);
         currentWorld = list.get(list.size() == 1 ? 0 : random.nextInt(list.size() - 1));
+        currentWorld.setDifficulty(Difficulty.PEACEFUL);
     }
 
     public void teleportPlayer(Player player) {

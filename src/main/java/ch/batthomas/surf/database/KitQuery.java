@@ -72,11 +72,11 @@ public class KitQuery {
         return kits;
     }
 
-    public String serializeItem(ItemStack item) {
+    private String serializeItem(ItemStack item) {
         return gson.toJson(item != null ? item.serialize() : null);
     }
 
-    public void deserializeItem(Kit kit, String path, String item) {
+    private void deserializeItem(Kit kit, String path, String item) {
         if (gson.fromJson(item, Map.class) != null) {
             kit.addItem(path, ItemStack.deserialize(gson.fromJson(item, Map.class)));
         }
