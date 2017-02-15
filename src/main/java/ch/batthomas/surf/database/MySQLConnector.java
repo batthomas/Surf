@@ -2,7 +2,6 @@ package ch.batthomas.surf.database;
 
 import ch.batthomas.surf.Surf;
 import ch.batthomas.surf.util.ConfigHelper;
-import com.sun.rowset.CachedRowSetImpl;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -59,12 +58,9 @@ public class MySQLConnector {
     public ResultSet executeQuery(PreparedStatement statement) {
         if (isConnected()) {
             ExecutorService exe = Executors.newCachedThreadPool();
-            Future<CachedRowSet> future = exe.submit(() -> {
+            Future<ResultSet> future = exe.submit(() -> {
                 try {
-                    ResultSet result = statement.executeQuery();
-                    CachedRowSet cached = RowSetProvider.newFactory().createCachedRowSet();
-                    cached.populate(result);
-                    return cached;
+                    return statement.executeQuery();
                 } catch (SQLException ex) {
                     Logger.getLogger(MySQLConnector.class.getName()).log(Level.SEVERE, null, ex);
                 }
