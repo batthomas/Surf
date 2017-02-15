@@ -1,5 +1,6 @@
 package ch.batthomas.surf.database;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -18,32 +19,22 @@ public class StatsQuery {
     }
 
     public void addPlayer(Player player) throws SQLException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("INSERT IGNORE INTO surf_stats (uuid, kills, deaths) VALUES ('").append(player.getUniqueId()).append("', 0, 0)");
-        mysql.executeUpdate(sb.toString());
-    }
-
-    public void setStats(Player player, String mode, int amount) throws SQLException {
-        switch (mode) {
-            case "kills":
-            case "deaths":
-                StringBuilder sb = new StringBuilder();
-                sb.append("UPDATE surf_stats SET ").append(mode).append("='").append(amount).append("' WHERE uuid='").append(player.getUniqueId()).append("'");
-                mysql.executeUpdate(sb.toString());
-                break;
-            default:
-                break;
-        }
+        String query = "INSERT IGNORE INTO surf_stats (uuid, kills, deaths) VALUES (?, 0, 0)";
+        PreparedStatement statement = mysql.getConnection().prepareStatement(query);
+        statement.setString(1, player.getUniqueId().toString());
+        mysql.executeUpdate(statement);
     }
 
     public void addStats(UUID uuid, String mode, int amount) throws SQLException {
         switch (mode) {
             case "kills":
             case "deaths":
-                StringBuilder sb = new StringBuilder();
                 int added = Integer.parseInt(getStats(uuid, mode)) + amount;
-                sb.append("UPDATE surf_stats SET ").append(mode).append("='").append(added).append("' WHERE uuid='").append(uuid).append("'");
-                mysql.executeUpdate(sb.toString());
+                String query = "UPDATE surf_stats SET " + mode + "=? WHERE uuid=?";
+                PreparedStatement statement = mysql.getConnection().prepareStatement(query);
+                statement.setString(1, mode);
+                statement.setString(2, uuid.toString());
+                mysql.executeUpdate(statement);
                 break;
             default:
                 break;
@@ -54,9 +45,10 @@ public class StatsQuery {
         switch (mode) {
             case "kills":
             case "deaths":
-                StringBuilder sb = new StringBuilder();
-                sb.append("SELECT ").append(mode).append(" FROM surf_stats WHERE uuid='").append(uuid).append("';");
-                ResultSet rs = mysql.executeQuery(sb.toString());
+                String query = "SELECT " + mode + " FROM surf_stats WHERE uuid=?";
+                PreparedStatement statement = mysql.getConnection().prepareStatement(query);
+                statement.setString(1, uuid.toString());
+                ResultSet rs = mysql.executeQuery(statement);
                 if (rs.first()) {
                     return rs.getString(1);
                 }

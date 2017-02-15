@@ -2,6 +2,7 @@ package ch.batthomas.surf.database;
 
 import ch.batthomas.surf.util.Kit;
 import com.google.gson.Gson;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,25 +25,26 @@ public class KitQuery {
     }
 
     public void addKit(Kit kit) throws SQLException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("INSERT INTO surf_kits (name, slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9, helmet, chestplate, leggings, boots)");
-        sb.append("VALUES (");
-        sb.append("'").append(kit.getName()).append("'").append(", ");
+        String query = "INSERT INTO surf_kits (name, slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9, helmet, chestplate, leggings, boots) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        PreparedStatement statement = mysql.getConnection().prepareStatement(query);
+        statement.setString(1, kit.getName());
         for (int i = 1; i < 10; i++) {
-            sb.append("'").append(serializeItem(kit.getItems().get("slot" + i))).append("'").append(", ");
+            statement.setString(i + 1, serializeItem(kit.getItems().get("slot" + i)));
         }
-        sb.append("'").append(serializeItem(kit.getItems().get("helmet"))).append("'").append(", ");
-        sb.append("'").append(serializeItem(kit.getItems().get("chestplate"))).append("'").append(", ");
-        sb.append("'").append(serializeItem(kit.getItems().get("leggings"))).append("'").append(", ");
-        sb.append("'").append(serializeItem(kit.getItems().get("boots"))).append("'");
-        sb.append(")");
-        mysql.executeUpdate(sb.toString());
+        statement.setString(11, serializeItem(kit.getItems().get("helmet")));
+        statement.setString(12, serializeItem(kit.getItems().get("chestplate")));
+        statement.setString(13, serializeItem(kit.getItems().get("leggings")));
+        statement.setString(14, serializeItem(kit.getItems().get("boots")));
+        mysql.executeUpdate(statement);
     }
 
     public Kit getKit(String name) throws SQLException {
-        StringBuilder sb = new StringBuilder();
-        sb.append("SELECT * FROM surf_kits WHERE name='").append(name).append("'");
-        ResultSet rs = mysql.executeQuery(sb.toString());
+        String query = "SELECT * FROM surf_kits WHERE name=?";
+        PreparedStatement statement = mysql.getConnection().prepareStatement(query);
+        statement.setString(1, name);
+        ResultSet rs = mysql.executeQuery(statement);
+
         rs.first();
         Kit kit = new Kit(rs.getString("name"));
         for (int i = 1; i < 10; i++) {
@@ -56,7 +58,10 @@ public class KitQuery {
     }
 
     public List<Kit> getKits() throws SQLException {
-        ResultSet rs = mysql.executeQuery("SELECT * FROM surf_kits");
+        String query = "SELECT * FROM surf_kits";
+        PreparedStatement statement = mysql.getConnection().prepareStatement(query);
+        ResultSet rs = mysql.executeQuery(statement);
+        
         List<Kit> kits = new ArrayList<>();
         while (rs.next()) {
             Kit kit = new Kit(rs.getString("name"));
