@@ -37,32 +37,37 @@ public class Stats implements CommandExecutor {
             cs.sendMessage(ChatColor.RED + "Nur Spieler koennen diesen Command ausführen!");
             return false;
         }
-        Player player = (Player) cs;
-        if (cmd.getName().equalsIgnoreCase("stats")) {
-            if (args != null && args.length > 0) {
-                UUID uuid = lookupUUID(args[0]);
-                if (uuid != null) {
+        try {
+            Player player = (Player) cs;
+            if (cmd.getName().equalsIgnoreCase("stats")) {
+                if (args != null && args.length > 0) {
+                    UUID uuid = plugin.getMojangAPIHelper().getUUID(args[0]);
+                    if (uuid != null) {
+                        try {
+                            player.sendMessage(plugin.getPrefix() + "§l- §6Stats von " + args[0] + " §7-");
+                            player.sendMessage("           §7● §6Kills§7: " + plugin.getStatsQuery().getStats(uuid, "kills"));
+                            player.sendMessage("           §7● §6Deaths§7: " + plugin.getStatsQuery().getStats(uuid, "deaths"));
+                            player.sendMessage("           §7● §6K/D§7: " + calculateKD(uuid));
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Stats.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        player.sendMessage(plugin.getPrefix() + "Dieser Spieler wurde nicht gefunden");
+                    }
+                } else {
                     try {
-                        player.sendMessage(plugin.getPrefix() + "§l- §6Stats von " + args[0] + " §7-");
-                        player.sendMessage("           §7● §6Kills§7: " + plugin.getStatsQuery().getStats(uuid, "kills"));
-                        player.sendMessage("           §7● §6Deaths§7: " + plugin.getStatsQuery().getStats(uuid, "deaths"));
-                        player.sendMessage("           §7● §6K/D§7: " + calculateKD(uuid));
+                        player.sendMessage(plugin.getPrefix() + "§l- §6Stats von " + player.getName() + " §7-");
+                        player.sendMessage("           §7● §6Kills§7: " + plugin.getStatsQuery().getStats(player.getUniqueId(), "kills"));
+                        player.sendMessage("           §7● §6Deaths§7: " + plugin.getStatsQuery().getStats(player.getUniqueId(), "deaths"));
+                        player.sendMessage("           §7● §6K/D§7: " + calculateKD(player.getUniqueId()));
                     } catch (SQLException ex) {
                         Logger.getLogger(Stats.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else {
-                    player.sendMessage(plugin.getPrefix() + "Dieser Spieler wurde nicht gefunden");
-                }
-            } else {
-                try {
-                    player.sendMessage(plugin.getPrefix() + "§l- §6Stats von " + player.getName() + " §7-");
-                    player.sendMessage("           §7● §6Kills§7: " + plugin.getStatsQuery().getStats(player.getUniqueId(), "kills"));
-                    player.sendMessage("           §7● §6Deaths§7: " + plugin.getStatsQuery().getStats(player.getUniqueId(), "deaths"));
-                    player.sendMessage("           §7● §6K/D§7: " + calculateKD(player.getUniqueId()));
-                } catch (SQLException ex) {
-                    Logger.getLogger(Stats.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+
+        } catch (IOException ex) {
+
         }
         return false;
     }
@@ -71,32 +76,5 @@ public class Stats implements CommandExecutor {
         double kills = Double.parseDouble(plugin.getStatsQuery().getStats(uuid, "kills"));
         double deaths = Double.parseDouble(plugin.getStatsQuery().getStats(uuid, "deaths"));
         return Double.parseDouble(new DecimalFormat("##.##").format(kills / deaths));
-    }
-
-    private UUID lookupUUID(String name) {
-        try {
-            URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + name);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("User-Agent", "Mozilla/5.0");
-            if (con.getResponseCode() == 200) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-                Gson gson = new Gson();
-                String rawuuid = gson.fromJson(response.toString(), JsonObject.class).get("id").getAsString();
-                String uuid = rawuuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5");
-                return UUID.fromString(uuid);
-            } else {
-                return null;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Stats.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
     }
 }

@@ -20,6 +20,7 @@ import ch.batthomas.surf.scheduler.GameScheduler;
 import ch.batthomas.surf.level.LevelManager;
 import ch.batthomas.surf.listener.InteractListener;
 import ch.batthomas.surf.util.GameState;
+import ch.batthomas.surf.util.MojangAPIHelper;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -43,6 +44,7 @@ public class Surf extends JavaPlugin {
     private KitManager km;
     private WorldManager wm;
     private LevelManager lc;
+    private MojangAPIHelper mojang;
 
     private String prefix;
     private GameState state;
@@ -51,6 +53,7 @@ public class Surf extends JavaPlugin {
     public void onEnable() {
         prefix = "§b§lSurf §r§8| §7";
         state = GameState.INGAME;
+        mojang = new MojangAPIHelper(this);
         connectMySQL();
         registerCommands();
         registerEvents();
@@ -62,7 +65,11 @@ public class Surf extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        try {
+            mysql.disconnect();
+        } catch (SQLException ex) {
+            Logger.getLogger(Surf.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void registerCommands() {
@@ -146,5 +153,9 @@ public class Surf extends JavaPlugin {
 
     public void setState(GameState state) {
         this.state = state;
+    }
+
+    public MojangAPIHelper getMojangAPIHelper() {
+        return mojang;
     }
 }
