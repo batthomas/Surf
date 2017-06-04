@@ -30,8 +30,6 @@ Die Überraschungen erhält man sobald man über einen Bedrockblock läuft.
 * **/setkit** speichert die Items im Inventar in der Datenbank als gültiges Kit. `Permission: surf.setup`
 </details>
 
-===
-
 ###  Installation
 Für die Nutzung dieses Plugins ist ein Spigot 1.11.2 Server und eine MySQL Datenbank erforderlich. Zuerst kopiert man das Plugin in das zugehörige Verzeichnis, kopiert 5 Maps in den WorldContainer und lässt die 2 MySQL Queries laufen. Danach startet man den Server, der ohne gültige Maps im Setupmode startet, und konfiguriert mit den Commands (/setup \<goto> und /setspawn) die Maps. Am Ende muss man nur noch die Kits mit dem /setkit Command konfigurieren und den Server restarten. Falls etwas noch nicht konfiguriert worden ist, startet der Server im Setupmode.
 
